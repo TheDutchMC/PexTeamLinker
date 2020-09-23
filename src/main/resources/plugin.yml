@@ -1,0 +1,8 @@
+name: @name@
+main: @groupId@.@name@.@name@
+version: @version@
+author: @author@
+api-version: @apiVersion@
+commands:
+ linker:
+  description: PexTeamLinker base command

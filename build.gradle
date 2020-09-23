@@ -1,0 +1,63 @@
+import org.apache.tools.ant.filters.ReplaceTokens
+import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+
+plugins {
+    id 'java'
+    id 'eclipse'
+	id 'com.github.johnrengelman.shadow' version '5.0.0'
+    
+}
+
+allprojects {
+
+	version = pluginVersion
+	group = pluginGroup	
+
+	sourceCompatibility = 1.8
+	targetCompatibility = 1.8
+
+	repositories {
+		jcenter()
+  	  	maven{ url "https://hub.spigotmc.org/nexus/content/repositories/snapshots" }
+   	 	maven{ url "https://oss.sonatype.org/content/repositories/snapshots" }
+    }
+    
+	processResources {
+    	from(sourceSets.main.resources.srcDirs) {
+        	filter ReplaceTokens, tokens: [version: version]
+		filter ReplaceTokens, tokens: [name: pluginName]
+		filter ReplaceTokens, tokens: [groupId: pluginGroup]
+		filter ReplaceTokens, tokens: [author: pluginAuthor]
+		filter ReplaceTokens, tokens: [apiVersion: pluginApiVersion]
+		}
+    }
+}
+
+dependencies {
+	
+	compileOnly 'org.spigotmc:spigot-api:1.16.1-R0.1-SNAPSHOT'
+	
+	//JDA, for hooking into Discord
+	compile ('net.dv8tion:JDA:4.2.0_168') {
+		exclude module: 'opus-java' 
+	}
+	
+}
+
+task testJar(type: ShadowJar) {
+	
+	description 'Build a test Jar'
+	archiveClassifier = 'DEV'
+	from sourceSets.main.output
+	configurations = [project.configurations.runtime]
+	destinationDirectory = file("$rootDir/server/plugins")
+}
+
+task releaseJar(type: ShadowJar) {
+
+	description 'Build a release Jar'
+	archiveClassifier = 'RELEASE'
+	from sourceSets.main.output
+	configurations = [project.configurations.runtime]
+	destinationDirectory = file("$rootDir/releases")
+}

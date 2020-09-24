@@ -3,6 +3,9 @@ main: @groupId@.@name@.@name@
 version: @version@
 author: @author@
 api-version: @apiVersion@
+softdepend: ["PermissionsEx"]
 commands:
  linker:
   description: PexTeamLinker base command
+ auth:
+  description: Alias for /linker connect

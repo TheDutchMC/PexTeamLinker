@@ -30,6 +30,10 @@ public class Prefab {
 			return Remove.remove(sender, args);
 		}
 		
+		else {
+			sender.sendMessage(PexTeamLinker.getPluginPrefix() + ChatColor.GOLD + "Invalid subcommand!");
+		}
+		
 		
 		return true;
 	}

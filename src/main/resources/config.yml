@@ -1,5 +1,5 @@
 discordToken: "NULL"
-discordLinkingChannel: "NULL"
 botNameAndTag: "Example#0001"
+discordGuildId: "NULL"
 verifiedPlayers:
 availablePrefabs:

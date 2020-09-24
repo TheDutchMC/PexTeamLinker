@@ -20,6 +20,7 @@ public class LinkerCommandCompleter implements TabCompleter {
 			List<String> possibleCommands = new ArrayList<>();
 			possibleCommands.add("help");
 			possibleCommands.add("prefab");
+			possibleCommands.add("connect");
 			
 			return possibleCommands;
 		}

@@ -20,13 +20,16 @@ public class JdaHandler {
 			jda.awaitReady();
 			
 		} catch(LoginException e) {
-			PexTeamLinker.logWarn("Unable to login to Discord. Please check the token and your internet connection!\n"
-					+"Errors may occur from now on!");
+			PexTeamLinker.logWarn("Unable to login to Discord. Please check the token and your internet connection! Errors may occur from now on!");
+			PexTeamLinker.logWarn("Shutting down plugin.");
+			
 			Bukkit.getPluginManager().disablePlugin(PexTeamLinker.INSTANCE);
 			return;
 			
 		} catch(InterruptedException e) {
 			PexTeamLinker.logWarn("JDA login process got interrupted. Errors may occur from now on!");
+			PexTeamLinker.logWarn("Shutting down plugin.");
+			
 			Bukkit.getPluginManager().disablePlugin(PexTeamLinker.INSTANCE);
 			return;
 		}
@@ -34,5 +37,13 @@ public class JdaHandler {
 		jda.addEventListener(new PrivateMessageReceived());
 		
 		PexTeamLinker.logInfo("JDA setup complete.");
+	}
+	
+	public JDA getJda() {
+		return jda;
+	}
+	
+	public static void shutdownJda() throws Exception {
+		jda.shutdownNow();
 	}
 }

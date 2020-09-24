@@ -13,7 +13,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 
 public class ConfigurationHandler {
 
-	public static String discordToken, discordLinkingChannel, botNameAndTag;
+	public static String discordToken, botNameAndTag, discordGuildId;
 	
 	public static List<String> availablePrefabNames;
 	
@@ -46,8 +46,9 @@ public class ConfigurationHandler {
 	
 	public void readConfig() {
 		discordToken = this.getConfig().getString("discordToken");
-		discordLinkingChannel = this.getConfig().getString("discordLinkingChannel");
 		botNameAndTag = this.getConfig().getString("botNameAndTag");
+		discordGuildId = this.getConfig().getString("discordGuildId");
+		
 		availablePrefabNames = this.getConfig().getStringList("availablePrefabs");
 		
 		//Verified Players
@@ -64,9 +65,9 @@ public class ConfigurationHandler {
 	public void setVerifiedPlayer() {
 		
 		List<String> verifiedPlayers = new ArrayList<>();
-		for(Map.Entry<String, UUID> entry : Verification.getVerifiedPlayers().entrySet()) {
-			String discord = entry.getKey();
-			UUID uuid = entry.getValue();
+		for(Map.Entry<UUID, String> entry : Verification.getVerifiedPlayers().entrySet()) {
+			String discord = entry.getValue();
+			UUID uuid = entry.getKey();
 			
 			verifiedPlayers.add(discord + "<-#->" + uuid);
 		}

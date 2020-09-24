@@ -11,7 +11,7 @@ import org.bukkit.entity.Player;
 public class Verification {
 	
 	private static HashMap<String, UUID> pendingVerifications = new HashMap<>();
-	private static HashMap<String, UUID> verifiedPlayers = new HashMap<>();
+	private static HashMap<UUID, String> verifiedPlayers = new HashMap<>();
 
 	public static HashMap<String, UUID> getPendingVerifications() {
 		return pendingVerifications;
@@ -40,15 +40,15 @@ public class Verification {
 	}
 	
 	public static void addVerifiedPlayer(String discord, UUID uuid) {
-		verifiedPlayers.put(discord, uuid);
+		verifiedPlayers.put(uuid, discord);
 		PexTeamLinker.CONFIG.setVerifiedPlayer();
 	}
 	
 	public static void addVerifiedPlayerInitialize(String discord, UUID uuid) {
-		verifiedPlayers.put(discord, uuid);
+		verifiedPlayers.put(uuid, discord);
 	}
 	
-	public static HashMap<String, UUID> getVerifiedPlayers() {
+	public static HashMap<UUID, String> getVerifiedPlayers() {
 		return verifiedPlayers;
 	}
 	

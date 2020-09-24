@@ -28,13 +28,13 @@ public class PrivateMessageReceived extends ListenerAdapter {
 		
 		Verification.removePendingVerification(message);
 		
-		String author = event.getAuthor().getAsTag();
+		String author = event.getAuthor().getId();
 		
-		PexTeamLinker.logWarn(verifiedPlayer.getName());
+		PexTeamLinker.logInfo("Player " + verifiedPlayer.getName() + " has linked their Discord to Minecraft.");
 		
 		Verification.addVerifiedPlayer(author, verifiedPlayer.getUniqueId());
 		
 		event.getChannel().sendMessage("Authenticated with the Minecraft user ``" + verifiedPlayer.getName() + "``!").queue();
-		verifiedPlayer.sendMessage(PexTeamLinker.getPluginPrefix() + ChatColor.GOLD + "You have been verified with the Discord user " + ChatColor.RED + author + ChatColor.GOLD + "!");
+		verifiedPlayer.sendMessage(PexTeamLinker.getPluginPrefix() + ChatColor.GOLD + "You have been authenticated with the Discord user " + ChatColor.RED + event.getAuthor().getAsTag() + ChatColor.GOLD + "!");
 	}
 }

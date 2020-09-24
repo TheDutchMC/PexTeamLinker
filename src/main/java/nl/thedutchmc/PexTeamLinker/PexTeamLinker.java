@@ -4,9 +4,12 @@ import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import net.md_5.bungee.api.ChatColor;
+import nl.thedutchmc.PexTeamLinker.commands.AuthCommandCompleter;
+import nl.thedutchmc.PexTeamLinker.commands.AuthCommandExecutor;
 import nl.thedutchmc.PexTeamLinker.commands.LinkerCommandCompleter;
 import nl.thedutchmc.PexTeamLinker.commands.LinkerCommandExecutor;
 import nl.thedutchmc.PexTeamLinker.discord.JdaHandler;
+import nl.thedutchmc.PexTeamLinker.minecraftEvents.PlayerJoinEventListener;
 import nl.thedutchmc.PexTeamLinker.prefabs.Prefabs;
 
 public class PexTeamLinker extends JavaPlugin {
@@ -22,20 +25,53 @@ public class PexTeamLinker extends JavaPlugin {
 		
 		CONFIG = new ConfigurationHandler();
 		CONFIG.loadConfig();
-		PREFABS = new Prefabs();
 		
+		PREFABS = new Prefabs();
 		PREFABS.loadPrefabsFromStorage();
 		
 		JDA = new JdaHandler(ConfigurationHandler.discordToken);
 		
-		getCommand("linker").setExecutor(new LinkerCommandExecutor());
-		getCommand("linker").setTabCompleter(new LinkerCommandCompleter());
+		//JdaHandler can disable the plugin, so we check if it is still enabled before proceeding.
+		if(!this.isEnabled()) {
+			return;
+		}
 		
+		//Commands and tab completers
+		this.getCommand("linker").setExecutor(new LinkerCommandExecutor());
+		this.getCommand("linker").setTabCompleter(new LinkerCommandCompleter());
+		
+		this.getCommand("auth").setExecutor(new AuthCommandExecutor());
+		this.getCommand("auth").setTabCompleter(new AuthCommandCompleter());
+		
+		//Minecraft event listeners
+		Bukkit.getPluginManager().registerEvents(new PlayerJoinEventListener(), this);
+		
+		logInfo("Welcome to PexTeamLinker version " + this.getDescription().getVersion() + " by TheDutchMC!");
 	}
 	
 	@Override
 	public void onDisable() {
+		final int DISCONNECT_DELAY = 3;
+		int delayLeft = DISCONNECT_DELAY;
 		
+		logInfo("Giving work queue " + DISCONNECT_DELAY + " seconds to empty...");
+
+		while(delayLeft > 0) {
+			try {
+				Thread.sleep(1000);
+				delayLeft--;
+			} catch (InterruptedException e) {
+				logWarn("There was an error gracefully shutting down the plugin!");
+			}
+		}
+		
+		logInfo("Disconnecting from Discord...");
+
+		try {
+			JdaHandler.shutdownJda();
+		} catch(Exception e) {} //We're going to get exceptions from JDA, but we're just not going to care ¯\_(ツ)_/¯
+
+		logInfo("Thank you for using PexTeamLinker by TheDutchMC");	
 	}
 	
 	public static String getPluginPrefix() {

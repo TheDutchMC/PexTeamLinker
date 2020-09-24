@@ -62,6 +62,7 @@ public class StorageHandler {
 				
 			} catch(IOException | ClassNotFoundException e) {
 				PexTeamLinker.logWarn("Something went wrong whilst loading the prefab " + name + "! Errors may occur!");
+				e.printStackTrace();
 			}
 		}
 		

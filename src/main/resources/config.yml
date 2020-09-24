@@ -1,5 +1,9 @@
 discordToken: "NULL"
 botNameAndTag: "Example#0001"
 discordGuildId: "NULL"
-verifiedPlayers:
+useCustomAuthConfigPath: false
+
+#On Windows use double backslashes. So C:\Somefolder\SomeOtherFolder\ becoomes C:\\SomeFolder\\SomeOtherFolder
+customAuthConfigurationPath: ""
+isMainServer: true
 availablePrefabs:

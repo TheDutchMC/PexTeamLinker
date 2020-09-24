@@ -4,12 +4,14 @@ import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import net.md_5.bungee.api.ChatColor;
+import nl.thedutchmc.PexTeamLinker.authentication.Authentication;
 import nl.thedutchmc.PexTeamLinker.commands.AuthCommandCompleter;
 import nl.thedutchmc.PexTeamLinker.commands.AuthCommandExecutor;
 import nl.thedutchmc.PexTeamLinker.commands.LinkerCommandCompleter;
 import nl.thedutchmc.PexTeamLinker.commands.LinkerCommandExecutor;
 import nl.thedutchmc.PexTeamLinker.discord.JdaHandler;
 import nl.thedutchmc.PexTeamLinker.minecraftEvents.PlayerJoinEventListener;
+import nl.thedutchmc.PexTeamLinker.minecraftEvents.PlayerLoginEventListener;
 import nl.thedutchmc.PexTeamLinker.prefabs.Prefabs;
 
 public class PexTeamLinker extends JavaPlugin {
@@ -31,20 +33,29 @@ public class PexTeamLinker extends JavaPlugin {
 		
 		JDA = new JdaHandler(ConfigurationHandler.discordToken);
 		
+		//Create a new Authentication object to load the PlayerProfiles from disk into memory.
+		new Authentication();
+		
 		//JdaHandler can disable the plugin, so we check if it is still enabled before proceeding.
 		if(!this.isEnabled()) {
 			return;
 		}
 		
 		//Commands and tab completers
-		this.getCommand("linker").setExecutor(new LinkerCommandExecutor());
-		this.getCommand("linker").setTabCompleter(new LinkerCommandCompleter());
 		
-		this.getCommand("auth").setExecutor(new AuthCommandExecutor());
-		this.getCommand("auth").setTabCompleter(new AuthCommandCompleter());
+		if(ConfigurationHandler.isMainServer) {
+			this.getCommand("linker").setExecutor(new LinkerCommandExecutor());
+			this.getCommand("linker").setTabCompleter(new LinkerCommandCompleter());
+			
+			this.getCommand("auth").setExecutor(new AuthCommandExecutor());
+			this.getCommand("auth").setTabCompleter(new AuthCommandCompleter());
+		}
+		
+		
 		
 		//Minecraft event listeners
 		Bukkit.getPluginManager().registerEvents(new PlayerJoinEventListener(), this);
+		Bukkit.getPluginManager().registerEvents(new PlayerLoginEventListener(), this);
 		
 		logInfo("Welcome to PexTeamLinker version " + this.getDescription().getVersion() + " by TheDutchMC!");
 	}

@@ -2,10 +2,7 @@ package nl.thedutchmc.PexTeamLinker;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.UUID;
 
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -13,7 +10,8 @@ import org.bukkit.configuration.file.YamlConfiguration;
 
 public class ConfigurationHandler {
 
-	public static String discordToken, botNameAndTag, discordGuildId;
+	public static String discordToken, botNameAndTag, discordGuildId, customAuthConfigurationPath;
+	public static boolean isMainServer, useCustomAuthConfigPath;
 	
 	public static List<String> availablePrefabNames;
 	
@@ -48,24 +46,27 @@ public class ConfigurationHandler {
 		discordToken = this.getConfig().getString("discordToken");
 		botNameAndTag = this.getConfig().getString("botNameAndTag");
 		discordGuildId = this.getConfig().getString("discordGuildId");
+		useCustomAuthConfigPath = this.getConfig().getBoolean("useCustomAuthConfigPath");
+		customAuthConfigurationPath = (useCustomAuthConfigPath) ? this.getConfig().getString("customAuthConfigurationPath") : PexTeamLinker.INSTANCE.getDataFolder()  + File.separator + "PlayerProfiles";
+		isMainServer = this.getConfig().getBoolean("isMainServer");
 		
 		availablePrefabNames = this.getConfig().getStringList("availablePrefabs");
 		
 		//Verified Players
-		List<String> verifiedPlayers = this.getConfig().getStringList("verifiedPlayers");
+		/*List<String> verifiedPlayers = this.getConfig().getStringList("verifiedPlayers");
 		for(String str : verifiedPlayers) {
 			String[] parts = str.split("<-#->");
 						
 			UUID playerUuid = UUID.fromString(parts[1]);
 			
-			Verification.addVerifiedPlayerInitialize(parts[0], playerUuid);
-		}
+			Authentication.addVerifiedPlayerInitialize(parts[0], playerUuid);
+		}*/
 	}
 	
-	public void setVerifiedPlayer() {
+	/*public void setVerifiedPlayer() {
 		
 		List<String> verifiedPlayers = new ArrayList<>();
-		for(Map.Entry<UUID, String> entry : Verification.getVerifiedPlayers().entrySet()) {
+		for(Map.Entry<UUID, String> entry : Authentication.getVerifiedPlayers().entrySet()) {
 			String discord = entry.getValue();
 			UUID uuid = entry.getKey();
 			
@@ -79,7 +80,7 @@ public class ConfigurationHandler {
 		} catch (IOException e) {
 			PexTeamLinker.logWarn("There was an error saving the configuration! Errors may occur!");
 		}
-	}
+	}*/
 	
 	public void setAvailablePrefabs() {
 		

@@ -15,7 +15,7 @@ import net.dv8tion.jda.api.entities.Role;
 import net.md_5.bungee.api.ChatColor;
 import nl.thedutchmc.PexTeamLinker.ConfigurationHandler;
 import nl.thedutchmc.PexTeamLinker.PexTeamLinker;
-import nl.thedutchmc.PexTeamLinker.Verification;
+import nl.thedutchmc.PexTeamLinker.authentication.Authentication;
 import nl.thedutchmc.PexTeamLinker.prefabs.Prefab;
 
 public class PlayerJoinEventListener implements Listener {
@@ -24,7 +24,7 @@ public class PlayerJoinEventListener implements Listener {
 	public void onPlayerJoinEvent(PlayerJoinEvent event) {
 		UUID uuid = event.getPlayer().getUniqueId();
 		
-		if(!Verification.getVerifiedPlayers().containsKey(uuid)) {
+		if(!Authentication.getVerifiedPlayers().containsKey(uuid)) {
 			PexTeamLinker.logInfo("Player " + event.getPlayer().getName() + " is not verified.");
 			
 			event.getPlayer().sendMessage(PexTeamLinker.getPluginPrefix() + ChatColor.GOLD + "You have not linked your discord yet. Please use " + ChatColor.RED + "/auth" + ChatColor.GOLD + " to link your Discord.");
@@ -32,7 +32,7 @@ public class PlayerJoinEventListener implements Listener {
 			return;
 		}
 		
-		String discordNameAsId = Verification.getVerifiedPlayers().get(uuid);
+		String discordNameAsId = Authentication.getVerifiedPlayers().get(uuid);
 		
 		Guild guild = PexTeamLinker.JDA.getJda().getGuildById(ConfigurationHandler.discordGuildId);
 				

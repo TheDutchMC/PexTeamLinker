@@ -1,11 +1,15 @@
 package nl.thedutchmc.PexTeamLinker.discord;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.security.auth.login.LoginException;
 
 import org.bukkit.Bukkit;
 
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
+import net.dv8tion.jda.api.requests.GatewayIntent;
 import nl.thedutchmc.PexTeamLinker.PexTeamLinker;
 import nl.thedutchmc.PexTeamLinker.discord.listeners.PrivateMessageReceived;
 
@@ -15,8 +19,15 @@ public class JdaHandler {
 	
 	public JdaHandler(String token) {
 		
+		List<GatewayIntent> intents = new ArrayList<>();
+		intents.add(GatewayIntent.GUILD_MESSAGES);
+		intents.add(GatewayIntent.DIRECT_MESSAGES);
+		
 		try {
-			jda = JDABuilder.createDefault(token).build();
+			jda = JDABuilder.createDefault(token)
+					.enableIntents(intents)
+					.build();
+			
 			jda.awaitReady();
 			
 		} catch(LoginException e) {
